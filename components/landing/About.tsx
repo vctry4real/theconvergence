@@ -49,20 +49,29 @@ export default function About() {
     <section id="about" className="py-24 bg-gray-50">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
-        <div className="max-w-3xl mb-16">
-          <p className="text-blue-600 font-semibold text-sm tracking-widest uppercase mb-3">About the Conference</p>
-          <h2 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            A Premier Leadership &amp; Business Conference
-          </h2>
-          <p className="text-gray-600 text-lg leading-relaxed">
-            The Convergence is designed to equip entrepreneurs, professionals, executives, and scaling businesses
-            with the insight, strategy, and networks required to thrive in an evolving global economy.
-          </p>
-          <p className="text-gray-600 text-lg leading-relaxed mt-4">
-            Through keynote sessions and strategic conversations, participants gain actionable perspectives on how to
-            build resilient organizations, accelerate professional growth, make sound financial decisions, and position
-            themselves for long-term relevance and impact.
-          </p>
+        <div className="mb-16 grid lg:grid-cols-2 gap-10 items-end">
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <span className="w-8 h-px bg-blue-600" />
+              <p className="text-blue-600 font-bold text-xs tracking-[0.3em] uppercase">About the Conference</p>
+            </div>
+            <h2 className="text-5xl lg:text-6xl font-black text-gray-900 leading-[1.05]">
+              A Premier<br />
+              <span className="text-blue-700">Leadership</span> &amp;<br />
+              Business Conference
+            </h2>
+          </div>
+          <div className="space-y-5 lg:pb-2">
+            <p className="text-gray-500 text-lg leading-relaxed border-l-2 border-blue-100 pl-5">
+              The Convergence is designed to equip entrepreneurs, professionals, executives, and scaling businesses
+              with the insight, strategy, and networks required to thrive in an evolving global economy.
+            </p>
+            <p className="text-gray-500 text-lg leading-relaxed border-l-2 border-teal-100 pl-5">
+              Through keynote sessions and strategic conversations, participants gain actionable perspectives on how to
+              build resilient organizations, accelerate professional growth, make sound financial decisions, and position
+              themselves for long-term relevance and impact.
+            </p>
+          </div>
         </div>
 
         {/* Pillars */}
@@ -79,25 +88,52 @@ export default function About() {
         </div>
 
         {/* Who attends */}
-        <div className="bg-blue-700 rounded-3xl p-10 lg:p-14 grid lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <p className="text-teal-300 font-semibold text-sm tracking-widest uppercase mb-3">Who Should Attend</p>
-            <h3 className="text-3xl lg:text-4xl font-black text-white leading-tight">
-              Built for Leaders Who Are Scaling
-            </h3>
+        <div className="relative overflow-hidden rounded-3xl bg-gray-900">
+          {/* Background grid texture */}
+          <div
+            className="absolute inset-0 opacity-[0.04]"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
+              backgroundSize: "40px 40px",
+            }}
+          />
+          {/* Accent blobs */}
+          <div className="absolute -top-20 -right-20 w-72 h-72 bg-blue-700 rounded-full opacity-30 blur-3xl" />
+          <div className="absolute -bottom-16 -left-16 w-56 h-56 bg-teal-500 rounded-full opacity-20 blur-3xl" />
+
+          <div className="relative z-10 p-10 lg:p-14 grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left */}
+            <div>
+              <span className="inline-block text-[11px] font-bold tracking-[0.25em] uppercase text-teal-400 bg-teal-400/10 border border-teal-400/20 px-3 py-1 rounded-full mb-5">
+                Who Should Attend
+              </span>
+              <h3 className="text-4xl lg:text-5xl font-black text-white leading-tight mb-6">
+                Built for Leaders<br />
+                <span className="text-teal-400">Who Are Scaling</span>
+              </h3>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                Convergence is curated — not open to everyone. It gathers the professionals
+                and business leaders already in motion and ready for the next level.
+              </p>
+            </div>
+
+            {/* Right */}
+            <ul className="space-y-3">
+              {audience.map((item, i) => (
+                <li
+                  key={item}
+                  className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl px-5 py-4 backdrop-blur-sm hover:bg-white/10 transition-colors"
+                >
+                  <span className="text-xs font-black text-teal-400/60 w-5 shrink-0 tabular-nums">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="w-px h-6 bg-white/10 shrink-0" />
+                  <span className="text-white/80 text-sm font-medium">{item}</span>
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul className="space-y-4">
-            {audience.map((item) => (
-              <li key={item} className="flex items-start gap-3">
-                <span className="w-6 h-6 bg-teal-400 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                  <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                  </svg>
-                </span>
-                <span className="text-blue-100">{item}</span>
-              </li>
-            ))}
-          </ul>
         </div>
       </div>
     </section>
