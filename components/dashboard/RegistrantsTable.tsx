@@ -4,22 +4,6 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import StatusBadge from "./StatusBadge";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import type { RegistrationStatus } from "@/lib/validations";
 
 type Registration = {
@@ -33,43 +17,40 @@ type Registration = {
   status: RegistrationStatus;
 };
 
-const TYPE_LABELS: Record<string, string> = {
-  individual: "Individual",
-  business: "Business",
-  corporate: "Corporate",
+const TYPE_LABELS: Record<string, { label: string; color: string }> = {
+  individual: { label: "Individual", color: "text-purple-700 bg-purple-50 border border-purple-200" },
+  business:   { label: "Business",   color: "text-orange-700 bg-orange-50 border border-orange-200" },
+  corporate:  { label: "Corporate",  color: "text-blue-700   bg-blue-50   border border-blue-200"   },
 };
 
-const STATUSES: { value: string; label: string }[] = [
-  { value: "all", label: "All Statuses" },
-  { value: "pending", label: "Pending" },
-  { value: "approved", label: "Approved" },
-  { value: "paid", label: "Paid" },
-  { value: "invite_sent", label: "Invite Sent" },
-];
+const STATUSES = ["all", "pending", "approved", "paid", "invite_sent"] as const;
+const TYPES    = ["all", "individual", "business", "corporate"] as const;
 
-const TYPES: { value: string; label: string }[] = [
-  { value: "all", label: "All Types" },
-  { value: "individual", label: "Individual" },
-  { value: "business", label: "Business" },
-  { value: "corporate", label: "Corporate" },
-];
+const STATUS_LABELS: Record<string, string> = {
+  all: "All Statuses", pending: "Pending", approved: "Approved",
+  paid: "Paid", invite_sent: "Invite Sent",
+};
+const TYPE_LABEL_MAP: Record<string, string> = {
+  all: "All Types", individual: "Individual", business: "Business", corporate: "Corporate",
+};
 
 export default function RegistrantsTable({ data }: { data: Registration[] }) {
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [typeFilter, setTypeFilter] = useState("all");
+  const [search, setSearch]         = useState("");
+  const [statusFilter, setStatus]   = useState("all");
+  const [typeFilter, setType]       = useState("all");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
-  const [, startTransition] = useTransition();
-  const router = useRouter();
+  const [, startTransition]         = useTransition();
+  const router                      = useRouter();
 
   const filtered = data.filter((r) => {
-    const matchesSearch =
-      r.full_name.toLowerCase().includes(search.toLowerCase()) ||
-      r.email.toLowerCase().includes(search.toLowerCase()) ||
-      r.organization.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = statusFilter === "all" || r.status === statusFilter;
-    const matchesType = typeFilter === "all" || r.registration_type === typeFilter;
-    return matchesSearch && matchesStatus && matchesType;
+    const q = search.toLowerCase();
+    return (
+      (r.full_name.toLowerCase().includes(q) ||
+        r.email.toLowerCase().includes(q) ||
+        r.organization.toLowerCase().includes(q)) &&
+      (statusFilter === "all" || r.status === statusFilter) &&
+      (typeFilter   === "all" || r.registration_type === typeFilter)
+    );
   });
 
   const handleStatusChange = async (id: string, newStatus: string) => {
@@ -90,107 +71,116 @@ export default function RegistrantsTable({ data }: { data: Registration[] }) {
     <div className="space-y-4">
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
-        <Input
-          placeholder="Search name, email, or organisation..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="max-w-sm"
-        />
-        <Select value={statusFilter} onValueChange={(v) => v && setStatusFilter(v)}>
-          <SelectTrigger className="w-44">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {STATUSES.map((s) => (
-              <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select value={typeFilter} onValueChange={(v) => v && setTypeFilter(v)}>
-          <SelectTrigger className="w-40">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {TYPES.map((t) => (
-              <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <p className="text-sm text-gray-400 self-center ml-auto">
-          {filtered.length} of {data.length} registrants
+        <div className="relative flex-1 max-w-sm">
+          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+          </svg>
+          <input
+            type="text"
+            placeholder="Search name, email, organisation…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-9 pr-4 h-9 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-teal-500 transition-colors"
+          />
+        </div>
+
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatus(e.target.value)}
+          className="h-9 px-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-teal-500 transition-colors"
+        >
+          {STATUSES.map((s) => (
+            <option key={s} value={s}>{STATUS_LABELS[s]}</option>
+          ))}
+        </select>
+
+        <select
+          value={typeFilter}
+          onChange={(e) => setType(e.target.value)}
+          className="h-9 px-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-teal-500 transition-colors"
+        >
+          {TYPES.map((t) => (
+            <option key={t} value={t}>{TYPE_LABEL_MAP[t]}</option>
+          ))}
+        </select>
+
+        <p className="text-xs text-gray-400 self-center sm:ml-auto">
+          {filtered.length} / {data.length} registrants
         </p>
       </div>
 
       {/* Table */}
       <div className="rounded-xl border border-gray-100 overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-gray-50">
-              <TableHead className="font-semibold text-gray-600">Name</TableHead>
-              <TableHead className="font-semibold text-gray-600">Organisation</TableHead>
-              <TableHead className="font-semibold text-gray-600">Type</TableHead>
-              <TableHead className="font-semibold text-gray-600">Date</TableHead>
-              <TableHead className="font-semibold text-gray-600">Status</TableHead>
-              <TableHead />
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-gray-50 border-b border-gray-100">
+              {["Applicant", "Organisation", "Type", "Applied", "Status", ""].map((h) => (
+                <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
             {filtered.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center text-gray-400 py-12">
+              <tr>
+                <td colSpan={6} className="text-center text-gray-400 py-16 text-sm">
                   No registrants found.
-                </TableCell>
-              </TableRow>
+                </td>
+              </tr>
             ) : (
-              filtered.map((r) => (
-                <TableRow key={r.id} className="hover:bg-gray-50/50 transition-colors">
-                  <TableCell>
-                    <div>
-                      <p className="font-semibold text-gray-900 text-sm">{r.full_name}</p>
-                      <p className="text-gray-400 text-xs">{r.email}</p>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-sm text-gray-600">{r.organization}</TableCell>
-                  <TableCell>
-                    <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
-                      {TYPE_LABELS[r.registration_type] ?? r.registration_type}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-sm text-gray-500">
-                    {new Date(r.created_at).toLocaleDateString("en-GB", {
-                      day: "numeric", month: "short", year: "numeric",
-                    })}
-                  </TableCell>
-                  <TableCell>
-                    <Select
-                      value={r.status}
-                      onValueChange={(val) => val && handleStatusChange(r.id, val)}
-                      disabled={updatingId === r.id}
-                    >
-                      <SelectTrigger className="h-8 w-36 border-0 bg-transparent p-0 shadow-none focus:ring-0">
+              filtered.map((r) => {
+                const typeStyle = TYPE_LABELS[r.registration_type] ?? { label: r.registration_type, color: "text-gray-600 bg-gray-100 border border-gray-200" };
+                return (
+                  <tr key={r.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/60 transition-colors group">
+                    <td className="px-4 py-3.5">
+                      <p className="font-semibold text-gray-900 text-sm leading-none">{r.full_name}</p>
+                      <p className="text-gray-400 text-xs mt-1">{r.email}</p>
+                    </td>
+                    <td className="px-4 py-3.5 text-gray-600 text-sm">{r.organization}</td>
+                    <td className="px-4 py-3.5">
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${typeStyle.color}`}>
+                        {typeStyle.label}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3.5 text-gray-400 text-xs tabular-nums">
+                      {new Date(r.created_at).toLocaleDateString("en-GB", {
+                        day: "numeric", month: "short", year: "numeric",
+                      })}
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <div className="relative inline-block">
+                        <select
+                          value={r.status}
+                          onChange={(e) => handleStatusChange(r.id, e.target.value)}
+                          disabled={updatingId === r.id}
+                          className="absolute inset-0 w-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                        >
+                          <option value="pending">Pending</option>
+                          <option value="approved">Approved</option>
+                          <option value="paid">Paid</option>
+                          <option value="invite_sent">Invite Sent</option>
+                        </select>
                         <StatusBadge status={r.status} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="pending">Pending</SelectItem>
-                        <SelectItem value="approved">Approved</SelectItem>
-                        <SelectItem value="paid">Paid</SelectItem>
-                        <SelectItem value="invite_sent">Invite Sent</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </TableCell>
-                  <TableCell>
-                    <Link
-                      href={`/dashboard/${r.id}`}
-                      className="text-xs text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                      View →
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              ))
+                      </div>
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <Link
+                        href={`/dashboard/${r.id}`}
+                        className="text-xs font-semibold text-gray-400 hover:text-teal-600 transition-colors flex items-center gap-1"
+                      >
+                        View
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })
             )}
-          </TableBody>
-        </Table>
+          </tbody>
+        </table>
       </div>
     </div>
   );

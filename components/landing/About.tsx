@@ -46,27 +46,27 @@ export default function About() {
   ];
 
   return (
-    <section id="about" className="py-24 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="about" className="py-16 sm:py-24 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="mb-16 grid lg:grid-cols-2 gap-10 items-end">
+        <div className="mb-12 sm:mb-16 grid lg:grid-cols-2 gap-8 sm:gap-10 items-end">
           <div>
-            <div className="flex items-center gap-3 mb-5">
-              <span className="w-8 h-px bg-blue-600" />
-              <p className="text-blue-600 font-bold text-xs tracking-[0.3em] uppercase">About the Conference</p>
+            <div className="flex items-center gap-3 mb-4 sm:mb-5">
+              <span className="w-8 h-px bg-teal-500" />
+              <p className="text-teal-500 font-bold text-xs tracking-[0.3em] uppercase">About the Conference</p>
             </div>
-            <h2 className="text-5xl lg:text-6xl font-black text-gray-900 leading-[1.05]">
+            <h2 className="text-3xl sm:text-4xl lg:text-6xl font-black text-gray-900 leading-[1.05]">
               A Premier<br />
-              <span className="text-blue-700">Leadership</span> &amp;<br />
+              <span className="text-teal-600">Leadership</span> &amp;<br />
               Business Conference
             </h2>
           </div>
-          <div className="space-y-5 lg:pb-2">
-            <p className="text-gray-500 text-lg leading-relaxed border-l-2 border-blue-100 pl-5">
+          <div className="space-y-4 sm:space-y-5 lg:pb-2">
+            <p className="text-gray-500 text-base sm:text-lg leading-relaxed border-l-2 border-teal-100 pl-4 sm:pl-5">
               The Convergence is designed to equip entrepreneurs, professionals, executives, and scaling businesses
               with the insight, strategy, and networks required to thrive in an evolving global economy.
             </p>
-            <p className="text-gray-500 text-lg leading-relaxed border-l-2 border-teal-100 pl-5">
+            <p className="text-gray-500 text-base sm:text-lg leading-relaxed border-l-2 border-teal-100 pl-4 sm:pl-5">
               Through keynote sessions and strategic conversations, participants gain actionable perspectives on how to
               build resilient organizations, accelerate professional growth, make sound financial decisions, and position
               themselves for long-term relevance and impact.
@@ -75,10 +75,10 @@ export default function About() {
         </div>
 
         {/* Pillars */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-14 sm:mb-20">
           {pillars.map((pillar) => (
-            <div key={pillar.title} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-12 h-12 bg-blue-50 text-blue-700 rounded-xl flex items-center justify-center mb-4">
+            <div key={pillar.title} className="bg-white rounded-2xl p-5 sm:p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-11 h-11 sm:w-12 sm:h-12 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center mb-4">
                 {pillar.icon}
               </div>
               <h3 className="font-bold text-gray-900 mb-2">{pillar.title}</h3>
@@ -88,8 +88,7 @@ export default function About() {
         </div>
 
         {/* Who attends */}
-        <div className="relative overflow-hidden rounded-3xl bg-gray-900">
-          {/* Background grid texture */}
+        <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gray-900">
           <div
             className="absolute inset-0 opacity-[0.04]"
             style={{
@@ -98,17 +97,15 @@ export default function About() {
               backgroundSize: "40px 40px",
             }}
           />
-          {/* Accent blobs */}
-          <div className="absolute -top-20 -right-20 w-72 h-72 bg-blue-700 rounded-full opacity-30 blur-3xl" />
+          <div className="absolute -top-20 -right-20 w-72 h-72 bg-teal-600 rounded-full opacity-30 blur-3xl" />
           <div className="absolute -bottom-16 -left-16 w-56 h-56 bg-teal-500 rounded-full opacity-20 blur-3xl" />
 
-          <div className="relative z-10 p-10 lg:p-14 grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left */}
+          <div className="relative z-10 p-6 sm:p-10 lg:p-14 grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
             <div>
-              <span className="inline-block text-[11px] font-bold tracking-[0.25em] uppercase text-teal-400 bg-teal-400/10 border border-teal-400/20 px-3 py-1 rounded-full mb-5">
+              <span className="inline-block text-[11px] font-bold tracking-[0.25em] uppercase text-teal-400 bg-teal-400/10 border border-teal-400/20 px-3 py-1 rounded-full mb-4 sm:mb-5">
                 Who Should Attend
               </span>
-              <h3 className="text-4xl lg:text-5xl font-black text-white leading-tight mb-6">
+              <h3 className="text-2xl sm:text-3xl lg:text-5xl font-black text-white leading-tight mb-4 sm:mb-6">
                 Built for Leaders<br />
                 <span className="text-teal-400">Who Are Scaling</span>
               </h3>
@@ -118,18 +115,17 @@ export default function About() {
               </p>
             </div>
 
-            {/* Right */}
-            <ul className="space-y-3">
+            <ul className="space-y-2 sm:space-y-3">
               {audience.map((item, i) => (
                 <li
                   key={item}
-                  className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl px-5 py-4 backdrop-blur-sm hover:bg-white/10 transition-colors"
+                  className="flex items-start sm:items-center gap-3 sm:gap-4 bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl px-4 sm:px-5 py-3 sm:py-4 backdrop-blur-sm hover:bg-white/10 transition-colors"
                 >
-                  <span className="text-xs font-black text-teal-400/60 w-5 shrink-0 tabular-nums">
+                  <span className="text-xs font-black text-teal-400/60 w-5 shrink-0 tabular-nums mt-0.5 sm:mt-0">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="w-px h-6 bg-white/10 shrink-0" />
-                  <span className="text-white/80 text-sm font-medium">{item}</span>
+                  <span className="w-px h-4 sm:h-6 bg-white/10 shrink-0" />
+                  <span className="text-white/80 text-sm font-medium leading-snug">{item}</span>
                 </li>
               ))}
             </ul>

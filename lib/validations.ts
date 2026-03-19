@@ -76,7 +76,7 @@ export const registrationSchema = z.object({
         name: z.string(),
         job_title: z.string(),
         department: z.string(),
-        email: z.email(),
+        email: z.string(),
       })
     )
     .optional(),

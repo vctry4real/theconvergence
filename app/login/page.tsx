@@ -12,7 +12,7 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex flex-col items-center">
-            <span className="font-bold text-xl text-blue-700 tracking-tight">The Convergence</span>
+            <span className="font-bold text-xl text-teal-600 tracking-tight">The Convergence</span>
             <span className="text-[10px] tracking-[0.2em] text-gray-400 uppercase mt-0.5">
               Faith · Business · Leadership
             </span>
@@ -29,7 +29,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-xs text-gray-400 mt-6">
-          <Link href="/" className="hover:text-blue-600 transition-colors">← Back to site</Link>
+          <Link href="/" className="hover:text-teal-500 transition-colors">← Back to site</Link>
         </p>
       </div>
     </div>

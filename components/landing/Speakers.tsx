@@ -1,92 +1,122 @@
+"use client";
+
+import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
+import { Mic } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
 const speakers = [
-  {
-    name: "Leye Falade",
-    title: "Incoming CEO, Nigeria LNG Limited",
-    session: "Fast-Tracking Your Career: Avoiding the Pitfalls That Slow You Down",
-    bio: "A seasoned oil and gas executive with extensive global leadership experience across the energy sector. His session provides practical guidance on navigating complex corporate environments and positioning for accelerated leadership growth.",
-    initials: "LF",
-    color: "from-blue-700 to-blue-900",
-  },
-  {
-    name: "Gbite Falade",
-    title: "Business & Energy Industry Leader",
-    session: "How to Build a World-Class Business",
-    bio: "A respected leader with deep experience in engineering, operations, and corporate strategy. He will explore the operational discipline and strategic systems required to create globally competitive organizations.",
-    initials: "GF",
-    color: "from-teal-600 to-teal-800",
-  },
-  {
-    name: "Kemi Adeosun",
-    title: "Former Minister of Finance, Nigeria",
-    session: "The Economics of Business",
-    bio: "An economist known for her leadership in economic policy and financial reform. Her session examines how macroeconomic forces and financial discipline shape business strategy and sustainable enterprise growth.",
-    initials: "KA",
-    color: "from-blue-600 to-teal-700",
-  },
-  {
-    name: "Tope Aladenusi",
-    title: "Global Product Designer & Technology Leader",
-    session: "Financial Decisions That Scale",
-    bio: "A globally recognized product designer whose digital products have been used by millions worldwide. He offers insights on how founders and executives can make strategic financial decisions that support long-term value creation.",
-    initials: "TA",
-    color: "from-indigo-700 to-blue-800",
-  },
-  {
-    name: "Segun Ola Zacchaeus",
-    title: "Chief Economist & Strategy Advisor",
-    session: "How Data Drives Business Decisions",
-    bio: "An expert in data analytics and economic intelligence. His session explores how organizations can leverage data and analytics to make smarter strategic choices and maintain a competitive edge.",
-    initials: "SOZ",
-    color: "from-blue-800 to-indigo-900",
-  },
-  {
-    name: "Rev. Lanre Oluseye",
-    title: "Pastor & Leadership Teacher, House on the Rock",
-    session: "A Seat at the Table, Not an Item on the Menu",
-    bio: "An influential voice known for empowering individuals toward purposeful leadership and societal impact. He will challenge participants to move from passive participation to intentional leadership.",
-    initials: "RLO",
-    color: "from-teal-700 to-blue-700",
-  },
+  { name: "Leye Falade",      position: "Incoming CEO, NLNG",                  image: "/assets/speakers/leye_falade.webp"     },
+  { name: "Gbite Falade",     position: "Aradel Holdings",                     image: "/assets/speakers/gbite_falade.webp"    },
+  { name: "Kemi Adeosun",     position: "Former Minister of Finance, Nigeria",  image: "/assets/speakers/kemi_adeosun.webp"    },
+  { name: "Tope Aladenusi",   position: "Deloitte Africa",                     image: "/assets/speakers/tope_aladenusi.webp"  },
+  { name: "Segun Zacchaeus",  position: "Chief Economist",                     image: "/assets/speakers/segun_zaccheaus.webp" },
+  { name: "Lanre Oluseye",    position: "CEO, Business Leader, Pastor",        image: "/assets/speakers/lanre_oluseye.webp"   },
 ];
+
+const col1 = speakers.slice(0, 3);
+const col2 = speakers.slice(3, 6);
+
+function SpeakerCard({ speaker }: { speaker: typeof speakers[0] }) {
+  return (
+    <div className="relative rounded-2xl overflow-hidden h-64 sm:h-72 w-full mb-4 shrink-0">
+      <Image
+        src={speaker.image}
+        alt={speaker.name}
+        fill
+        className="object-cover object-top"
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw"
+      />
+      <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
+      <div className="absolute bottom-0 left-0 p-4 sm:p-5">
+        <p className="text-white font-black text-base sm:text-lg leading-tight">{speaker.name}</p>
+        <p className="text-gray-300 text-xs sm:text-sm mt-0.5">{speaker.position}</p>
+      </div>
+    </div>
+  );
+}
 
 export default function Speakers() {
   return (
-    <section id="speakers" className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <p className="text-blue-600 font-semibold text-sm tracking-widest uppercase mb-3">Featured Speakers</p>
-          <h2 className="text-4xl lg:text-5xl font-black text-gray-900 leading-tight">
-            World-Class Voices. Practical Insights.
-          </h2>
-        </div>
+    <section id="speakers" className="bg-gray-950 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="grid lg:grid-cols-[1fr_1.2fr] gap-8 sm:gap-12 items-center py-16 sm:py-24">
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {speakers.map((speaker) => (
-            <div
-              key={speaker.name}
-              className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
-            >
-              {/* Avatar / Header */}
-              <div className={`bg-gradient-to-br ${speaker.color} p-8 flex items-center gap-4`}>
-                <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-white font-black text-xl shrink-0">
-                  {speaker.initials}
-                </div>
-                <div>
-                  <h3 className="text-white font-bold text-lg leading-tight">{speaker.name}</h3>
-                  <p className="text-white/70 text-sm mt-0.5">{speaker.title}</p>
-                </div>
+          {/* Left — text */}
+          <div className="space-y-6 sm:space-y-8">
+            <div>
+              <div className="flex items-center gap-3 mb-4 sm:mb-5">
+                <span className="w-8 h-px bg-teal-400" />
+                <p className="text-teal-400 font-bold text-xs tracking-[0.3em] uppercase">Featured Speakers</p>
               </div>
+              <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.05]">
+                Meet the Voices<br />
+                <span className="text-white/30">Shaping Prosperity.</span>
+              </h2>
+            </div>
 
-              {/* Session */}
-              <div className="p-6 space-y-3">
-                <div className="bg-blue-50 rounded-xl px-4 py-3">
-                  <p className="text-[11px] text-blue-500 font-semibold uppercase tracking-widest mb-1">Session</p>
-                  <p className="text-blue-800 font-semibold text-sm leading-snug">&ldquo;{speaker.session}&rdquo;</p>
-                </div>
-                <p className="text-gray-500 text-sm leading-relaxed">{speaker.bio}</p>
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-5 sm:p-6 max-w-sm">
+              <Mic className="w-5 h-5 sm:w-6 sm:h-6 text-teal-400 mb-3 sm:mb-4" strokeWidth={1.5} />
+              <p className="text-gray-400 text-sm leading-relaxed">
+                Leaders, executives, economists, and innovators defining the path to
+                prosperity in business and beyond.
+              </p>
+            </div>
+
+            <Link href="/register">
+              <Button className="bg-teal-500 hover:bg-teal-400 text-white font-bold px-6 sm:px-7 py-4 sm:py-5 rounded-full text-sm tracking-wide">
+                Apply to Attend →
+              </Button>
+            </Link>
+          </div>
+
+          {/* Right — marquee columns */}
+          {/* Mobile: single column; Desktop: two columns */}
+          <div className="h-80 sm:h-[480px] lg:h-[580px] overflow-hidden">
+
+            {/* Mobile: one column marquee */}
+            <div className="flex lg:hidden gap-4 h-full overflow-hidden">
+              <div className="flex-1 overflow-hidden">
+                <motion.div
+                  animate={{ y: ["0%", "-50%"] }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  className="flex flex-col"
+                >
+                  {[...speakers, ...speakers].map((speaker, i) => (
+                    <SpeakerCard key={`mob-${i}`} speaker={speaker} />
+                  ))}
+                </motion.div>
               </div>
             </div>
-          ))}
+
+            {/* Desktop: two columns */}
+            <div className="hidden lg:flex gap-4 h-full overflow-hidden">
+              <div className="flex-1 overflow-hidden">
+                <motion.div
+                  animate={{ y: ["0%", "-50%"] }}
+                  transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+                  className="flex flex-col"
+                >
+                  {[...col1, ...col1].map((speaker, i) => (
+                    <SpeakerCard key={`c1-${i}`} speaker={speaker} />
+                  ))}
+                </motion.div>
+              </div>
+              <div className="flex-1 overflow-hidden">
+                <motion.div
+                  animate={{ y: ["-50%", "0%"] }}
+                  transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+                  className="flex flex-col"
+                >
+                  {[...col2, ...col2].map((speaker, i) => (
+                    <SpeakerCard key={`c2-${i}`} speaker={speaker} />
+                  ))}
+                </motion.div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </section>
