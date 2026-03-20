@@ -5,6 +5,7 @@ import LogoutButton from "@/components/dashboard/LogoutButton";
 
 export const metadata = {
   title: "Dashboard | The Convergence 2026",
+  robots: { index: false, follow: false },
 };
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {

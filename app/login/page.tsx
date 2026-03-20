@@ -3,6 +3,7 @@ import LoginForm from "@/components/dashboard/LoginForm";
 
 export const metadata = {
   title: "Admin Login | The Convergence 2026",
+  robots: { index: false, follow: false },
 };
 
 export default function LoginPage() {
