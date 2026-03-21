@@ -142,7 +142,7 @@ export default function WhyAttend() {
               <div className="absolute inset-y-0 left-0 bg-teal-400 transition-all duration-500"
                 style={{ width: `${((currentIndex + 1) / CARDS.length) * 100}%` }} />
             </div>
-            <NavControls />
+            <NavControls currentIndex={currentIndex} total={CARDS.length} onPrev={handlePrev} onNext={handleNext} />
           </div>
         </div>
 
