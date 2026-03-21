@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { registrationSchema, RegistrationFormData } from "@/lib/validations";
 import { Button } from "@/components/ui/button";
@@ -24,6 +23,36 @@ const STEPS = [
   { label: "Your Profile", desc: "Tell us more" },
   { label: "Screening", desc: "Strategic questions" },
   { label: "Commitment", desc: "Final confirmation" },
+];
+
+const PAYMENT_LINKS: Record<string, string> = {
+  access:    "https://selar.com/77n5328h53",
+  executive: "https://selar.com/6e744a6147",
+  premier:   "https://selar.com/11317474sx",
+};
+
+const TICKET_OPTIONS = [
+  {
+    value: "access",
+    label: "Access Ticket",
+    price: "₦100,000",
+    description: "Full conference access including all keynote sessions and networking.",
+    icon: "🎟️",
+  },
+  {
+    value: "executive",
+    label: "Executive Ticket",
+    price: "₦300,000",
+    description: "Premium access with reserved seating, exclusive networking sessions, and executive briefings.",
+    icon: "💼",
+  },
+  {
+    value: "premier",
+    label: "Premier Ticket",
+    price: "₦500,000",
+    description: "All-inclusive VIP experience with front-row seating, private roundtables, and speaker meet & greet.",
+    icon: "👑",
+  },
 ];
 
 // ─── Sidebar ─────────────────────────────────────────────────────────────────
@@ -196,8 +225,6 @@ export default function RegistrationForm() {
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState("");
-  const router = useRouter();
-
   const {
     register,
     control,
@@ -233,7 +260,7 @@ export default function RegistrationForm() {
     2: ["registration_type"],
     3: [],
     4: [],
-    5: ["declaration"],
+    5: ["ticket_type", "declaration"],
   };
 
   const next = async () => {
@@ -255,7 +282,9 @@ export default function RegistrationForm() {
         setServerError(json.error || "Something went wrong. Please try again.");
         return;
       }
-      router.push("/thank-you");
+      // Redirect to the payment link for the selected ticket tier
+      const paymentUrl = PAYMENT_LINKS[data.ticket_type];
+      window.location.href = paymentUrl;
     } catch {
       setServerError(
         "Network error. Please check your connection and try again.",
@@ -1116,8 +1145,73 @@ export default function RegistrationForm() {
                 <StepHeading
                   step={5}
                   title="Commitment & Declaration"
-                  sub="Almost done — final confirmation."
+                  sub="Choose your ticket, then confirm your commitment."
                 />
+
+                {/* Ticket selection */}
+                <Field
+                  label="Select your ticket type"
+                  error={errors.ticket_type?.message}
+                  required
+                >
+                  <Controller
+                    name="ticket_type"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="grid gap-3">
+                        {TICKET_OPTIONS.map((opt) => (
+                          <button
+                            type="button"
+                            key={opt.value}
+                            onClick={() => field.onChange(opt.value)}
+                            className={`flex items-start gap-4 p-5 rounded-2xl border-2 text-left transition-all w-full ${
+                              field.value === opt.value
+                                ? "border-teal-500 bg-teal-50"
+                                : "border-gray-100 bg-gray-50 hover:border-teal-200"
+                            }`}
+                          >
+                            <div
+                              className={`w-11 h-11 rounded-xl text-xl flex items-center justify-center shrink-0 ${
+                                field.value === opt.value
+                                  ? "bg-teal-500/10"
+                                  : "bg-white border border-gray-200"
+                              }`}
+                            >
+                              {opt.icon}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-baseline justify-between gap-2 flex-wrap">
+                                <p className="font-black text-gray-900">{opt.label}</p>
+                                <p className={`font-black text-base shrink-0 ${
+                                  field.value === opt.value ? "text-teal-600" : "text-gray-700"
+                                }`}>
+                                  {opt.price}
+                                </p>
+                              </div>
+                              <p className="text-gray-400 text-sm mt-0.5 leading-snug">
+                                {opt.description}
+                              </p>
+                            </div>
+                            <div
+                              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 ${
+                                field.value === opt.value
+                                  ? "border-teal-500 bg-teal-500"
+                                  : "border-gray-300"
+                              }`}
+                            >
+                              {field.value === opt.value && (
+                                <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                </svg>
+                              )}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  />
+                </Field>
+
                 <Field
                   label="Willing to participate in networking sessions?"
                   error={errors.willing_to_network?.message}

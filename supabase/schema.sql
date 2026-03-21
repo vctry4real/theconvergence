@@ -53,7 +53,10 @@ create table public.registrations (
 
   -- 7. Commitment
   willing_to_network text,
-  heard_from text
+  heard_from text,
+
+  -- 8. Ticket Type
+  ticket_type text check (ticket_type in ('access', 'executive', 'premier'))
 );
 
 -- Enable Row Level Security

@@ -51,6 +51,33 @@ function CardContent({ card, isActive }: { card: typeof CARDS[0]; isActive: bool
   );
 }
 
+interface NavControlsProps {
+  currentIndex: number;
+  total: number;
+  onPrev: () => void;
+  onNext: () => void;
+}
+
+function NavControls({ currentIndex, total, onPrev, onNext }: NavControlsProps) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="text-gray-600 text-xs font-mono tracking-widest">
+        {String(currentIndex + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+      </span>
+      <div className="flex gap-2">
+        <button onClick={onPrev} disabled={currentIndex === 0}
+          className="w-10 h-10 sm:w-11 sm:h-11 border border-white/20 text-white flex items-center justify-center hover:border-teal-400 hover:text-teal-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all rounded-xl">
+          <ChevronLeft size={16} />
+        </button>
+        <button onClick={onNext} disabled={currentIndex === total - 1}
+          className="w-10 h-10 sm:w-11 sm:h-11 border border-white/20 text-white flex items-center justify-center hover:border-teal-400 hover:text-teal-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all rounded-xl">
+          <ChevronRight size={16} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function WhyAttend() {
   const [currentIndex, setCurrentIndex] = useState(2);
 
@@ -59,25 +86,6 @@ export default function WhyAttend() {
 
   const card = CARDS[currentIndex];
 
-  // Shared nav controls
-  const NavControls = () => (
-    <div className="flex items-center gap-3">
-      <span className="text-gray-600 text-xs font-mono tracking-widest">
-        {String(currentIndex + 1).padStart(2, "0")} / {String(CARDS.length).padStart(2, "0")}
-      </span>
-      <div className="flex gap-2">
-        <button onClick={handlePrev} disabled={currentIndex === 0}
-          className="w-10 h-10 sm:w-11 sm:h-11 border border-white/20 text-white flex items-center justify-center hover:border-teal-400 hover:text-teal-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all rounded-xl">
-          <ChevronLeft size={16} />
-        </button>
-        <button onClick={handleNext} disabled={currentIndex === CARDS.length - 1}
-          className="w-10 h-10 sm:w-11 sm:h-11 border border-white/20 text-white flex items-center justify-center hover:border-teal-400 hover:text-teal-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all rounded-xl">
-          <ChevronRight size={16} />
-        </button>
-      </div>
-    </div>
-  );
-
   return (
     <section id="why-attend" className="py-16 sm:py-28 bg-gray-950 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -85,8 +93,8 @@ export default function WhyAttend() {
         {/* Header */}
         <div className="mb-10 sm:mb-16">
           <div className="flex items-center gap-3 mb-5 sm:mb-6">
-            <span className="w-8 h-px bg-teal-400" />
-            <p className="text-teal-400 font-bold text-xs tracking-[0.3em] uppercase">Why Attend</p>
+            <span className="w-8 h-px bg-blue-400" />
+            <p className="text-blue-400 font-bold text-xs tracking-[0.3em] uppercase">Why Attend</p>
           </div>
 
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 sm:gap-10">
@@ -104,7 +112,9 @@ export default function WhyAttend() {
               <div className="flex flex-wrap gap-px bg-white/10 rounded-2xl overflow-hidden">
                 {OUTCOMES.map((o, i) => (
                   <div key={o} className="flex-1 min-w-28 bg-gray-950 px-4 sm:px-5 py-3 sm:py-4 hover:bg-white/5 transition-colors">
-                    <p className="text-teal-400 font-black text-xl sm:text-2xl mb-1">{String(i + 1).padStart(2, "0")}</p>
+                    <p className="font-black text-xl sm:text-2xl mb-1 text-teal-400">
+                      {String(i + 1).padStart(2, "0")}
+                    </p>
                     <p className="text-white font-semibold text-xs sm:text-sm">{o}</p>
                   </div>
                 ))}
@@ -117,14 +127,14 @@ export default function WhyAttend() {
                 <div className="absolute inset-y-0 left-0 bg-teal-400 transition-all duration-500"
                   style={{ width: `${((currentIndex + 1) / CARDS.length) * 100}%` }} />
               </div>
-              <NavControls />
+              <NavControls currentIndex={currentIndex} total={CARDS.length} onPrev={handlePrev} onNext={handleNext} />
             </div>
           </div>
         </div>
 
         {/* ── Mobile: single card (no absolute positioning) ── */}
         <div className="lg:hidden">
-          <div className="relative flex flex-col justify-between p-6 rounded-2xl overflow-hidden shadow-xl bg-teal-500 border border-teal-400 min-h-72">
+          <div className="relative flex flex-col justify-between p-6 rounded-2xl overflow-hidden shadow-xl bg-teal-600 border border-teal-500 min-h-72">
             <CardContent card={card} isActive />
           </div>
           <div className="flex items-center justify-between mt-4">
@@ -155,11 +165,12 @@ export default function WhyAttend() {
               xPosition = activeCardRightEdge + GAP_PX + upcomingOffset;
             }
 
+            // Blue = past/done, Teal = active/present, Blue-dark = upcoming
             const cardClasses = isActive
               ? "bg-teal-500 border border-teal-400"
               : isCollapsed
-                ? "bg-teal-800 border border-teal-700"
-                : "bg-teal-700 border border-teal-600";
+                ? "bg-blue-900 border border-blue-800"
+                : "bg-blue-800 border border-blue-700";
 
             return (
               <motion.div

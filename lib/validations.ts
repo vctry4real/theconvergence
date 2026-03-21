@@ -115,7 +115,12 @@ export const registrationSchema = z.object({
     ])
     .optional(),
 
-  // 8. Declaration
+  // 8. Ticket Type
+  ticket_type: z.enum(["access", "executive", "premier"], {
+    error: "Please select a ticket type",
+  }),
+
+  // 9. Declaration
   declaration: z.literal(true, {
     error: "You must confirm the declaration to submit",
   }),

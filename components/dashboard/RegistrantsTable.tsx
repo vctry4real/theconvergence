@@ -14,17 +14,26 @@ type Registration = {
   phone: string;
   organization: string;
   registration_type: string;
+  ticket_type: string | null;
   status: RegistrationStatus;
 };
 
 const TYPE_LABELS: Record<string, { label: string; color: string }> = {
   individual: { label: "Individual", color: "text-purple-700 bg-purple-50 border border-purple-200" },
   business:   { label: "Business",   color: "text-orange-700 bg-orange-50 border border-orange-200" },
-  corporate:  { label: "Corporate",  color: "text-blue-700   bg-blue-50   border border-blue-200"   },
+  corporate:  { label: "Corporate",  color: "text-blue-700 bg-blue-50 border border-blue-200" },
 };
 
-const STATUSES = ["all", "pending", "approved", "paid", "invite_sent"] as const;
-const TYPES    = ["all", "individual", "business", "corporate"] as const;
+const TICKET_LABELS: Record<string, { label: string; color: string }> = {
+  access:    { label: "Access",    color: "text-gray-700 bg-gray-100 border border-gray-200" },
+  executive: { label: "Executive", color: "text-blue-700 bg-blue-50 border border-blue-200" },
+  premier:   { label: "Premier",   color: "text-purple-700 bg-purple-50 border border-purple-200" },
+};
+
+const STATUSES  = ["all", "pending", "approved", "paid", "invite_sent"] as const;
+const TYPES     = ["all", "individual", "business", "corporate"] as const;
+const TICKETS   = ["all", "access", "executive", "premier"] as const;
+const SORT_OPTS = ["newest", "oldest", "name_asc", "name_desc", "ticket"] as const;
 
 const STATUS_LABELS: Record<string, string> = {
   all: "All Statuses", pending: "Pending", approved: "Approved",
@@ -33,25 +42,47 @@ const STATUS_LABELS: Record<string, string> = {
 const TYPE_LABEL_MAP: Record<string, string> = {
   all: "All Types", individual: "Individual", business: "Business", corporate: "Corporate",
 };
+const TICKET_LABEL_MAP: Record<string, string> = {
+  all: "All Tickets", access: "Access (₦100k)", executive: "Executive (₦300k)", premier: "Premier (₦500k)",
+};
+const SORT_LABEL_MAP: Record<string, string> = {
+  newest: "Newest first", oldest: "Oldest first",
+  name_asc: "Name A–Z", name_desc: "Name Z–A", ticket: "Ticket tier",
+};
 
 export default function RegistrantsTable({ data }: { data: Registration[] }) {
   const [search, setSearch]         = useState("");
   const [statusFilter, setStatus]   = useState("all");
   const [typeFilter, setType]       = useState("all");
+  const [ticketFilter, setTicket]   = useState("all");
+  const [sortBy, setSortBy]         = useState<typeof SORT_OPTS[number]>("newest");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [, startTransition]         = useTransition();
   const router                      = useRouter();
 
-  const filtered = data.filter((r) => {
-    const q = search.toLowerCase();
-    return (
-      (r.full_name.toLowerCase().includes(q) ||
-        r.email.toLowerCase().includes(q) ||
-        r.organization.toLowerCase().includes(q)) &&
-      (statusFilter === "all" || r.status === statusFilter) &&
-      (typeFilter   === "all" || r.registration_type === typeFilter)
-    );
-  });
+  const TICKET_ORDER: Record<string, number> = { access: 0, executive: 1, premier: 2 };
+
+  const filtered = data
+    .filter((r) => {
+      const q = search.toLowerCase();
+      return (
+        (r.full_name.toLowerCase().includes(q) ||
+          r.email.toLowerCase().includes(q) ||
+          r.organization.toLowerCase().includes(q)) &&
+        (statusFilter === "all" || r.status === statusFilter) &&
+        (typeFilter   === "all" || r.registration_type === typeFilter) &&
+        (ticketFilter === "all" || r.ticket_type === ticketFilter)
+      );
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "oldest":    return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+        case "name_asc":  return a.full_name.localeCompare(b.full_name);
+        case "name_desc": return b.full_name.localeCompare(a.full_name);
+        case "ticket":    return (TICKET_ORDER[a.ticket_type ?? ""] ?? 99) - (TICKET_ORDER[b.ticket_type ?? ""] ?? 99);
+        default:          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      }
+    });
 
   const handleStatusChange = async (id: string, newStatus: string) => {
     setUpdatingId(id);
@@ -69,7 +100,7 @@ export default function RegistrantsTable({ data }: { data: Registration[] }) {
 
   return (
     <div className="space-y-4">
-      {/* Filters */}
+      {/* Row 1: search + count */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1 max-w-sm">
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -83,15 +114,19 @@ export default function RegistrantsTable({ data }: { data: Registration[] }) {
             className="w-full pl-9 pr-4 h-9 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-teal-500 transition-colors"
           />
         </div>
+        <p className="text-xs text-gray-400 self-center sm:ml-auto">
+          {filtered.length} / {data.length} registrants
+        </p>
+      </div>
 
+      {/* Row 2: filters + sort */}
+      <div className="flex flex-wrap gap-2">
         <select
           value={statusFilter}
           onChange={(e) => setStatus(e.target.value)}
           className="h-9 px-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-teal-500 transition-colors"
         >
-          {STATUSES.map((s) => (
-            <option key={s} value={s}>{STATUS_LABELS[s]}</option>
-          ))}
+          {STATUSES.map((s) => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
         </select>
 
         <select
@@ -99,23 +134,33 @@ export default function RegistrantsTable({ data }: { data: Registration[] }) {
           onChange={(e) => setType(e.target.value)}
           className="h-9 px-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-teal-500 transition-colors"
         >
-          {TYPES.map((t) => (
-            <option key={t} value={t}>{TYPE_LABEL_MAP[t]}</option>
-          ))}
+          {TYPES.map((t) => <option key={t} value={t}>{TYPE_LABEL_MAP[t]}</option>)}
         </select>
 
-        <p className="text-xs text-gray-400 self-center sm:ml-auto">
-          {filtered.length} / {data.length} registrants
-        </p>
+        <select
+          value={ticketFilter}
+          onChange={(e) => setTicket(e.target.value)}
+          className="h-9 px-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-teal-500 transition-colors"
+        >
+          {TICKETS.map((t) => <option key={t} value={t}>{TICKET_LABEL_MAP[t]}</option>)}
+        </select>
+
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value as typeof SORT_OPTS[number])}
+          className="h-9 px-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-teal-500 transition-colors"
+        >
+          {SORT_OPTS.map((s) => <option key={s} value={s}>{SORT_LABEL_MAP[s]}</option>)}
+        </select>
       </div>
 
       {/* Table */}
-      <div className="rounded-xl border border-gray-100 overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="rounded-xl border border-gray-100 overflow-x-auto">
+        <table className="w-full text-sm min-w-[700px]">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-100">
-              {["Applicant", "Organisation", "Type", "Applied", "Status", ""].map((h) => (
-                <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              {["Applicant", "Organisation", "Type", "Ticket", "Applied", "Status", ""].map((h) => (
+                <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">
                   {h}
                 </th>
               ))}
@@ -124,15 +169,16 @@ export default function RegistrantsTable({ data }: { data: Registration[] }) {
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={6} className="text-center text-gray-400 py-16 text-sm">
+                <td colSpan={7} className="text-center text-gray-400 py-16 text-sm">
                   No registrants found.
                 </td>
               </tr>
             ) : (
               filtered.map((r) => {
-                const typeStyle = TYPE_LABELS[r.registration_type] ?? { label: r.registration_type, color: "text-gray-600 bg-gray-100 border border-gray-200" };
+                const typeStyle   = TYPE_LABELS[r.registration_type]   ?? { label: r.registration_type,   color: "text-gray-600 bg-gray-100 border border-gray-200" };
+                const ticketStyle = TICKET_LABELS[r.ticket_type ?? ""] ?? { label: r.ticket_type ?? "—",  color: "text-gray-400 bg-gray-50 border border-gray-200" };
                 return (
-                  <tr key={r.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/60 transition-colors group">
+                  <tr key={r.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/60 transition-colors">
                     <td className="px-4 py-3.5">
                       <p className="font-semibold text-gray-900 text-sm leading-none">{r.full_name}</p>
                       <p className="text-gray-400 text-xs mt-1">{r.email}</p>
@@ -143,7 +189,12 @@ export default function RegistrantsTable({ data }: { data: Registration[] }) {
                         {typeStyle.label}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5 text-gray-400 text-xs tabular-nums">
+                    <td className="px-4 py-3.5">
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${ticketStyle.color}`}>
+                        {ticketStyle.label}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3.5 text-gray-400 text-xs tabular-nums whitespace-nowrap">
                       {new Date(r.created_at).toLocaleDateString("en-GB", {
                         day: "numeric", month: "short", year: "numeric",
                       })}

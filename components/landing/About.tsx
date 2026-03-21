@@ -3,6 +3,7 @@ export default function About() {
     {
       title: "Career Acceleration",
       description: "Practical guidance on navigating complex corporate environments and building strategic influence.",
+      color: "blue",   // blue icon
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -12,6 +13,7 @@ export default function About() {
     {
       title: "Enterprise Growth",
       description: "Operational discipline, leadership mindset, and strategic systems required to build globally competitive organizations.",
+      color: "teal",
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -21,6 +23,7 @@ export default function About() {
     {
       title: "Economic Intelligence",
       description: "How macroeconomic forces, fiscal policy, and financial discipline shape business strategy and investment decisions.",
+      color: "blue",
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -30,6 +33,7 @@ export default function About() {
     {
       title: "Data-Driven Strategy",
       description: "Leveraging analytics and economic insight to make smarter strategic choices and maintain a competitive edge.",
+      color: "teal",
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
@@ -46,14 +50,20 @@ export default function About() {
   ];
 
   return (
-    <section id="about" className="py-16 sm:py-24 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+    <section id="about" className="py-16 sm:py-24 bg-gray-50 relative overflow-hidden">
+      {/* Subtle blue wash behind the section */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-50 rounded-full opacity-60 blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
+
         {/* Header */}
         <div className="mb-12 sm:mb-16 grid lg:grid-cols-2 gap-8 sm:gap-10 items-end">
           <div>
             <div className="flex items-center gap-3 mb-4 sm:mb-5">
-              <span className="w-8 h-px bg-teal-500" />
-              <p className="text-teal-500 font-bold text-xs tracking-[0.3em] uppercase">About the Conference</p>
+              <span className="w-8 h-px bg-blue-600" />
+              <p className="text-blue-600 font-bold text-xs tracking-[0.3em] uppercase">
+                About the Conference
+              </p>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-6xl font-black text-gray-900 leading-[1.05]">
               A Premier<br />
@@ -62,7 +72,7 @@ export default function About() {
             </h2>
           </div>
           <div className="space-y-4 sm:space-y-5 lg:pb-2">
-            <p className="text-gray-500 text-base sm:text-lg leading-relaxed border-l-2 border-teal-100 pl-4 sm:pl-5">
+            <p className="text-gray-500 text-base sm:text-lg leading-relaxed border-l-2 border-blue-200 pl-4 sm:pl-5">
               The Convergence is designed to equip entrepreneurs, professionals, executives, and scaling businesses
               with the insight, strategy, and networks required to thrive in an evolving global economy.
             </p>
@@ -74,17 +84,29 @@ export default function About() {
           </div>
         </div>
 
-        {/* Pillars */}
+        {/* Pillars — alternating blue / teal icon colors */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-14 sm:mb-20">
-          {pillars.map((pillar) => (
-            <div key={pillar.title} className="bg-white rounded-2xl p-5 sm:p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-11 h-11 sm:w-12 sm:h-12 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center mb-4">
-                {pillar.icon}
+          {pillars.map((pillar) => {
+            const isBlue = pillar.color === "blue";
+            return (
+              <div
+                key={pillar.title}
+                className="bg-white rounded-2xl p-5 sm:p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow group"
+              >
+                <div
+                  className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center mb-4 transition-colors ${
+                    isBlue
+                      ? "bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white"
+                      : "bg-teal-50 text-teal-600 group-hover:bg-teal-600 group-hover:text-white"
+                  }`}
+                >
+                  {pillar.icon}
+                </div>
+                <h3 className="font-bold text-gray-900 mb-2">{pillar.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{pillar.description}</p>
               </div>
-              <h3 className="font-bold text-gray-900 mb-2">{pillar.title}</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">{pillar.description}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Who attends */}
@@ -97,12 +119,14 @@ export default function About() {
               backgroundSize: "40px 40px",
             }}
           />
+          {/* Blue glow left */}
+          <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-blue-600 rounded-full opacity-25 blur-3xl" />
+          {/* Teal glow right */}
           <div className="absolute -top-20 -right-20 w-72 h-72 bg-teal-600 rounded-full opacity-30 blur-3xl" />
-          <div className="absolute -bottom-16 -left-16 w-56 h-56 bg-teal-500 rounded-full opacity-20 blur-3xl" />
 
           <div className="relative z-10 p-6 sm:p-10 lg:p-14 grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
             <div>
-              <span className="inline-block text-[11px] font-bold tracking-[0.25em] uppercase text-teal-400 bg-teal-400/10 border border-teal-400/20 px-3 py-1 rounded-full mb-4 sm:mb-5">
+              <span className="inline-block text-[11px] font-bold tracking-[0.25em] uppercase text-blue-400 bg-blue-400/10 border border-blue-400/20 px-3 py-1 rounded-full mb-4 sm:mb-5">
                 Who Should Attend
               </span>
               <h3 className="text-2xl sm:text-3xl lg:text-5xl font-black text-white leading-tight mb-4 sm:mb-6">
@@ -116,21 +140,29 @@ export default function About() {
             </div>
 
             <ul className="space-y-2 sm:space-y-3">
-              {audience.map((item, i) => (
-                <li
-                  key={item}
-                  className="flex items-start sm:items-center gap-3 sm:gap-4 bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl px-4 sm:px-5 py-3 sm:py-4 backdrop-blur-sm hover:bg-white/10 transition-colors"
-                >
-                  <span className="text-xs font-black text-teal-400/60 w-5 shrink-0 tabular-nums mt-0.5 sm:mt-0">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="w-px h-4 sm:h-6 bg-white/10 shrink-0" />
-                  <span className="text-white/80 text-sm font-medium leading-snug">{item}</span>
-                </li>
-              ))}
+              {audience.map((item, i) => {
+                const isBlue = i % 2 === 0;
+                return (
+                  <li
+                    key={item}
+                    className="flex items-start sm:items-center gap-3 sm:gap-4 bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl px-4 sm:px-5 py-3 sm:py-4 backdrop-blur-sm hover:bg-white/10 transition-colors"
+                  >
+                    <span
+                      className={`text-xs font-black w-5 shrink-0 tabular-nums mt-0.5 sm:mt-0 ${
+                        isBlue ? "text-blue-400/70" : "text-teal-400/70"
+                      }`}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="w-px h-4 sm:h-6 bg-white/10 shrink-0" />
+                    <span className="text-white/80 text-sm font-medium leading-snug">{item}</span>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
+
       </div>
     </section>
   );

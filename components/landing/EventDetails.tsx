@@ -47,12 +47,12 @@ export default function EventDetails() {
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 sm:gap-6 mb-10 sm:mb-14">
           <div>
             <div className="flex items-center gap-3 mb-4 sm:mb-5">
-              <span className="w-8 h-px bg-teal-500" />
-              <p className="text-teal-500 font-bold text-xs tracking-[0.3em] uppercase">Event Details</p>
+              <span className="w-8 h-px bg-blue-600" />
+              <p className="text-blue-600 font-bold text-xs tracking-[0.3em] uppercase">Event Details</p>
             </div>
             <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-gray-900 leading-[1.05]">
               Mark Your<br />
-              <span className="text-teal-600">Calendar.</span>
+              <span className="text-blue-600">Calendar.</span>
             </h2>
           </div>
           <p className="text-gray-400 max-w-xs leading-relaxed lg:text-right text-sm">
@@ -65,15 +65,15 @@ export default function EventDetails() {
           {details.map((d) => (
             <div
               key={d.label}
-              className="group flex items-start gap-4 sm:gap-5 bg-white border border-gray-100 rounded-2xl p-5 sm:p-7 hover:border-teal-200 hover:shadow-md transition-all duration-300"
+              className="group flex items-start gap-4 sm:gap-5 bg-white border border-gray-100 rounded-2xl p-5 sm:p-7 hover:border-blue-200 hover:shadow-md transition-all duration-300"
             >
-              <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 group-hover:bg-teal-600 group-hover:text-white transition-colors duration-300">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
                 {d.icon}
               </div>
               <div>
                 <p className="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 mb-1">{d.label}</p>
                 <p className="text-gray-900 font-black text-xl sm:text-2xl leading-none">{d.primary}</p>
-                <p className="text-teal-600 font-semibold text-sm mt-1">{d.secondary}</p>
+                <p className="text-blue-600 font-semibold text-sm mt-1">{d.secondary}</p>
                 {d.sub && <p className="text-gray-400 text-xs mt-0.5">{d.sub}</p>}
               </div>
             </div>
@@ -91,11 +91,11 @@ export default function EventDetails() {
             }}
           />
           <div className="absolute -top-24 -right-24 w-64 h-64 bg-teal-600 rounded-full opacity-30 blur-3xl" />
-          <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-teal-500 rounded-full opacity-20 blur-3xl" />
+          <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-blue-600 rounded-full opacity-25 blur-3xl" />
 
           <div className="relative z-10 px-6 py-10 sm:px-10 sm:py-14 lg:px-16 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 sm:gap-8">
             <div>
-              <span className="inline-block text-[10px] font-bold tracking-[0.25em] uppercase text-teal-400 bg-teal-400/10 border border-teal-400/20 px-3 py-1 rounded-full mb-3 sm:mb-4">
+              <span className="inline-block text-[10px] font-bold tracking-[0.25em] uppercase text-blue-400 bg-blue-400/10 border border-blue-400/20 px-3 py-1 rounded-full mb-3 sm:mb-4">
                 Screened Admission
               </span>
               <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight mb-2 sm:mb-3">
@@ -110,7 +110,10 @@ export default function EventDetails() {
 
             <div className="shrink-0 flex flex-col items-start lg:items-end gap-3 w-full sm:w-auto">
               <Link href="/register" className="w-full sm:w-auto">
-                <Button size="lg" className="w-full sm:w-auto bg-teal-600 hover:bg-teal-500 text-white font-bold text-base px-8 sm:px-10 py-5 sm:py-6 rounded-xl">
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto bg-teal-600 hover:bg-teal-700 text-white font-bold text-base px-8 sm:px-10 py-5 sm:py-6 rounded-xl"
+                >
                   Apply to Attend
                 </Button>
               </Link>
