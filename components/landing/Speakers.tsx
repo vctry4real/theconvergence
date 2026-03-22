@@ -43,6 +43,12 @@ const speakers = [
     image: "/assets/speakers/lanre_oluseye.webp",
     bio: "Lanre Oluseye is a passionate architect and visionary leader known for his ability to motivate and inspire audiences as a conference speaker. With an Executive MBA from the esteemed Metropolitan Business School in the United Kingdom, he complements his architectural expertise with advanced business acumen. He is an alumnus of several prestigious institutions, including the Graduate School of Business at the University of Cape Town, the Dale Carnegie Institute, and the London School of Economics and Political Science. Lanre is a Certified International Project Manager (CIPM) and a Fellow of the American Academy of Project Managers (FAAPM). He has also qualified as a Certified Emotional Intelligence Specialist, enabling him to harness the power of emotional intelligence to drive positive change within organizations.",
   },
+  {
+    name: "Olakunle Soriyan",
+    position: "Founder of ISEYA-Africa",
+    image: "/assets/speakers/olakunle.webp",
+    bio: " Olakunle Soriyan, also known as PK, is a formidable human. He is a Forbes, Wall Street Journal (WSJ), and USA Today best-selling author, autodidact and eclectic global thought leader, futurist, manifestation strategist, impact investor, and recipient of the prestigious President Joseph R. Biden (President of the United States) Lifetime Achievement Award (2024). With a unique blend of gift, skill, and aptitude, PK is arguably one of the worlds most resourceful talents. ",
+  },
 ];
 
 const col1 = speakers.slice(0, 3);

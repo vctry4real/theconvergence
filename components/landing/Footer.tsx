@@ -33,8 +33,14 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-xs text-gray-600">
-          &copy; 2026 The Convergence. All rights reserved.
+        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-600">
+          <span>&copy; 2026 The Convergence. All rights reserved.</span>
+          <a
+            href="mailto:Info@theconvergencephc.com"
+            className="text-gray-500 hover:text-teal-400 transition-colors"
+          >
+            Info@theconvergencephc.com
+          </a>
         </div>
       </div>
     </footer>

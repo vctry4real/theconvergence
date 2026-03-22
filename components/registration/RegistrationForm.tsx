@@ -248,19 +248,19 @@ export default function RegistrationForm() {
   const registrationType = watch("registration_type");
   const industryValue = watch("industry");
 
+  const step3Fields: (keyof RegistrationFormData)[] =
+    registrationType === "individual"
+      ? ["job_title", "department", "years_experience", "career_level", "salary_bracket", "career_challenge", "individual_convergence_goal"]
+      : registrationType === "business"
+      ? ["business_name", "business_stage", "employee_count", "annual_revenue", "primary_market", "scaling_challenge", "business_convergence_goal"]
+      : ["company_size", "corporate_revenue", "staff_count", "corporate_reason"];
+
   const stepFields: Record<number, (keyof RegistrationFormData)[]> = {
-    1: [
-      "full_name",
-      "email",
-      "phone",
-      "city_state",
-      "organization",
-      "industry",
-    ],
+    1: ["full_name", "email", "phone", "city_state", "organization", "industry"],
     2: ["registration_type"],
-    3: [],
-    4: [],
-    5: ["ticket_type", "declaration"],
+    3: step3Fields,
+    4: ["current_focus", "attended_conference", "decision_authority"],
+    5: ["ticket_type", "willing_to_network", "heard_from", "declaration"],
   };
 
   const next = async () => {
@@ -284,7 +284,7 @@ export default function RegistrationForm() {
       }
       // Redirect to the payment link for the selected ticket tier
       const paymentUrl = PAYMENT_LINKS[data.ticket_type];
-      window.location.href = paymentUrl;
+      window.location.assign(paymentUrl);
     } catch {
       setServerError(
         "Network error. Please check your connection and try again.",
@@ -316,7 +316,9 @@ export default function RegistrationForm() {
       {/* Right panel */}
       <div className="flex-1 bg-white flex flex-col">
         <form
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(onSubmit, () => {
+            setServerError("Some required fields are incomplete. Please go back and fill in all required fields before submitting.");
+          })}
           noValidate
           className="flex-1 flex flex-col"
         >
@@ -560,6 +562,7 @@ export default function RegistrationForm() {
                   <Field
                     label="Current Job Title"
                     error={errors.job_title?.message}
+                    required
                   >
                     <Input
                       className="h-11 bg-gray-50 border-gray-200 focus:border-teal-400"
@@ -567,7 +570,7 @@ export default function RegistrationForm() {
                       {...register("job_title")}
                     />
                   </Field>
-                  <Field label="Department" error={errors.department?.message}>
+                  <Field label="Department" error={errors.department?.message} required>
                     <Input
                       className="h-11 bg-gray-50 border-gray-200 focus:border-teal-400"
                       placeholder="e.g. Finance & Operations"
@@ -577,6 +580,7 @@ export default function RegistrationForm() {
                   <Field
                     label="Years of Experience"
                     error={errors.years_experience?.message}
+                    required
                   >
                     <Controller
                       name="years_experience"
@@ -603,6 +607,7 @@ export default function RegistrationForm() {
                   <Field
                     label="Career Level"
                     error={errors.career_level?.message}
+                    required
                   >
                     <Controller
                       name="career_level"
@@ -636,6 +641,7 @@ export default function RegistrationForm() {
                   <Field
                     label="Annual Salary Bracket (Confidential)"
                     error={errors.salary_bracket?.message}
+                    required
                   >
                     <Controller
                       name="salary_bracket"
@@ -668,6 +674,7 @@ export default function RegistrationForm() {
                 <Field
                   label="What scaling challenge are you currently facing?"
                   error={errors.career_challenge?.message}
+                  required
                 >
                   <Textarea
                     className="bg-gray-50 border-gray-200 focus:border-teal-400 resize-none"
@@ -679,6 +686,7 @@ export default function RegistrationForm() {
                 <Field
                   label="What do you hope to gain from Convergence?"
                   error={errors.individual_convergence_goal?.message}
+                  required
                 >
                   <Textarea
                     className="bg-gray-50 border-gray-200 focus:border-teal-400 resize-none"
@@ -702,6 +710,7 @@ export default function RegistrationForm() {
                   <Field
                     label="Business Name"
                     error={errors.business_name?.message}
+                    required
                   >
                     <Input
                       className="h-11 bg-gray-50 border-gray-200 focus:border-teal-400"
@@ -712,6 +721,7 @@ export default function RegistrationForm() {
                   <Field
                     label="Business Stage"
                     error={errors.business_stage?.message}
+                    required
                   >
                     <Controller
                       name="business_stage"
@@ -742,6 +752,7 @@ export default function RegistrationForm() {
                   <Field
                     label="Number of Employees"
                     error={errors.employee_count?.message}
+                    required
                   >
                     <Controller
                       name="employee_count"
@@ -768,6 +779,7 @@ export default function RegistrationForm() {
                   <Field
                     label="Average Annual Revenue"
                     error={errors.annual_revenue?.message}
+                    required
                   >
                     <Controller
                       name="annual_revenue"
@@ -799,6 +811,7 @@ export default function RegistrationForm() {
                   <Field
                     label="Primary Market"
                     error={errors.primary_market?.message}
+                    required
                   >
                     <Controller
                       name="primary_market"
@@ -830,6 +843,7 @@ export default function RegistrationForm() {
                   <Field
                     label="Biggest Scaling Challenge"
                     error={errors.scaling_challenge?.message}
+                    required
                   >
                     <Controller
                       name="scaling_challenge"
@@ -864,6 +878,7 @@ export default function RegistrationForm() {
                 <Field
                   label="What do you hope to gain from Convergence?"
                   error={errors.business_convergence_goal?.message}
+                  required
                 >
                   <Textarea
                     className="bg-gray-50 border-gray-200 focus:border-teal-400 resize-none"
@@ -887,6 +902,7 @@ export default function RegistrationForm() {
                   <Field
                     label="Company Size"
                     error={errors.company_size?.message}
+                    required
                   >
                     <Controller
                       name="company_size"
@@ -913,6 +929,7 @@ export default function RegistrationForm() {
                   <Field
                     label="Average Annual Revenue"
                     error={errors.corporate_revenue?.message}
+                    required
                   >
                     <Controller
                       name="corporate_revenue"
@@ -943,6 +960,7 @@ export default function RegistrationForm() {
                   <Field
                     label="Number of Staff Being Registered"
                     error={errors.staff_count?.message}
+                    required
                   >
                     <Input
                       className="h-11 bg-gray-50 border-gray-200 focus:border-teal-400"
@@ -1040,6 +1058,7 @@ export default function RegistrationForm() {
                 <Field
                   label="Why is your organisation sending this team?"
                   error={errors.corporate_reason?.message}
+                  required
                 >
                   <Textarea
                     className="bg-gray-50 border-gray-200 focus:border-teal-400 resize-none"
@@ -1062,6 +1081,7 @@ export default function RegistrationForm() {
                 <Field
                   label="Which best describes your current focus?"
                   error={errors.current_focus?.message}
+                  required
                 >
                   <Controller
                     name="current_focus"
@@ -1090,6 +1110,7 @@ export default function RegistrationForm() {
                 <Field
                   label="Attended a business leadership conference in the past 2 years?"
                   error={errors.attended_conference?.message}
+                  required
                 >
                   <Controller
                     name="attended_conference"
@@ -1112,6 +1133,7 @@ export default function RegistrationForm() {
                 <Field
                   label="Which best describes your decision-making authority?"
                   error={errors.decision_authority?.message}
+                  required
                 >
                   <Controller
                     name="decision_authority"
@@ -1215,6 +1237,7 @@ export default function RegistrationForm() {
                 <Field
                   label="Willing to participate in networking sessions?"
                   error={errors.willing_to_network?.message}
+                  required
                 >
                   <Controller
                     name="willing_to_network"
@@ -1237,6 +1260,7 @@ export default function RegistrationForm() {
                 <Field
                   label="How did you hear about Convergence?"
                   error={errors.heard_from?.message}
+                  required
                 >
                   <Controller
                     name="heard_from"

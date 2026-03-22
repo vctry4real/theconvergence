@@ -3,6 +3,7 @@ import Link from "next/link";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import StatusBadge from "@/components/dashboard/StatusBadge";
 import StatusUpdater from "@/components/dashboard/StatusUpdater";
+import TicketModal from "@/components/dashboard/TicketModal";
 import type { RegistrationStatus } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
@@ -93,9 +94,22 @@ export default async function RegistrantDetailPage({
               <span className="text-sm text-gray-500">{data.organization}</span>
             </div>
           </div>
-          <div className="shrink-0">
-            <p className="text-xs text-gray-400 mb-2">Update Status</p>
-            <StatusUpdater id={data.id} currentStatus={data.status as RegistrationStatus} />
+          <div className="shrink-0 flex flex-col gap-3">
+            <div>
+              <p className="text-xs text-gray-400 mb-2">Update Status</p>
+              <StatusUpdater id={data.id} currentStatus={data.status as RegistrationStatus} />
+            </div>
+            <TicketModal
+              registrant={{
+                id:                data.id,
+                full_name:         data.full_name,
+                email:             data.email,
+                phone:             data.phone,
+                organization:      data.organization,
+                ticket_type:       data.ticket_type ?? null,
+                registration_type: data.registration_type,
+              }}
+            />
           </div>
         </div>
 

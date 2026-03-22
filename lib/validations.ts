@@ -124,6 +124,53 @@ export const registrationSchema = z.object({
   declaration: z.literal(true, {
     error: "You must confirm the declaration to submit",
   }),
+}).superRefine((data, ctx) => {
+  const req = (path: string, value: string | undefined | null, message: string) => {
+    if (!value?.trim()) {
+      ctx.addIssue({ code: "custom", path: [path], message });
+    }
+  };
+  const reqEnum = (path: string, value: string | undefined, message: string) => {
+    if (!value) {
+      ctx.addIssue({ code: "custom", path: [path], message });
+    }
+  };
+
+  if (data.registration_type === "individual") {
+    req("job_title", data.job_title, "Job title is required");
+    req("department", data.department, "Department is required");
+    reqEnum("years_experience", data.years_experience, "Years of experience is required");
+    reqEnum("career_level", data.career_level, "Career level is required");
+    reqEnum("salary_bracket", data.salary_bracket, "Salary bracket is required");
+    req("career_challenge", data.career_challenge, "Please describe your challenge");
+    req("individual_convergence_goal", data.individual_convergence_goal, "Please share your goals");
+  }
+
+  if (data.registration_type === "business") {
+    req("business_name", data.business_name, "Business name is required");
+    reqEnum("business_stage", data.business_stage, "Business stage is required");
+    reqEnum("employee_count", data.employee_count, "Employee count is required");
+    reqEnum("annual_revenue", data.annual_revenue, "Annual revenue is required");
+    reqEnum("primary_market", data.primary_market, "Primary market is required");
+    reqEnum("scaling_challenge", data.scaling_challenge, "Scaling challenge is required");
+    req("business_convergence_goal", data.business_convergence_goal, "Please share your goals");
+  }
+
+  if (data.registration_type === "corporate") {
+    reqEnum("company_size", data.company_size, "Company size is required");
+    reqEnum("corporate_revenue", data.corporate_revenue, "Revenue is required");
+    req("staff_count", data.staff_count, "Staff count is required");
+    req("corporate_reason", data.corporate_reason, "Please describe your reason");
+  }
+
+  // Step 4 — all types
+  reqEnum("current_focus", data.current_focus, "Please select your current focus");
+  reqEnum("attended_conference", data.attended_conference, "Please answer this question");
+  reqEnum("decision_authority", data.decision_authority, "Please select your decision authority");
+
+  // Step 5 — all types
+  reqEnum("willing_to_network", data.willing_to_network, "Please answer this question");
+  reqEnum("heard_from", data.heard_from, "Please tell us how you heard about Convergence");
 });
 
 export type RegistrationFormData = z.infer<typeof registrationSchema>;
