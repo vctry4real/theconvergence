@@ -16,7 +16,7 @@ export default function Footer() {
           <div>
             <Logo variant="light" />
             <p className="text-gray-500 text-sm mt-3 ml-13">
-              Positioning for Prosperity — 2026 and Beyond
+              Driving Sustainable Growth, Long-Term Impact, and Scalable Success — 2026 and Beyond
             </p>
           </div>
 

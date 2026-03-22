@@ -19,11 +19,11 @@ export default function Hero() {
 
   const next = useCallback(
     () => setCurrent((c) => (c + 1) % SLIDES.length),
-    []
+    [],
   );
   const prev = useCallback(
     () => setCurrent((c) => (c - 1 + SLIDES.length) % SLIDES.length),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -58,7 +58,6 @@ export default function Hero() {
 
       {/* ── Main content ── */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-10 sm:pb-16 flex flex-col lg:flex-row items-end justify-between gap-8 sm:gap-12 min-h-screen">
-
         {/* Left — headline */}
         <div className="flex-1 flex flex-col justify-end pb-4 sm:pb-8 lg:pb-20">
           <div className="inline-flex w-fit items-center gap-2 mb-4 sm:mb-5">
@@ -133,9 +132,9 @@ export default function Hero() {
               <div className="w-12 h-0.5 bg-gray-200 mb-4 sm:mb-5" />
 
               <p className="text-gray-500 text-sm leading-relaxed mb-5 sm:mb-6">
-                Positioning for Prosperity — 2026 and Beyond. A curated,
-                screened gathering of mid-level professionals and scaling
-                business leaders.
+                Driving Sustainable Growth, Long-Term Impact, and Scalable
+                Success — 2026 and Beyond. A curated, screened gathering of
+                mid-level professionals and scaling business leaders.
               </p>
 
               <Link href="/register">
