@@ -34,16 +34,8 @@ export default function TicketModal({ registrant }: { registrant: TicketData }) 
     color: "bg-gray-100 text-gray-700 border-gray-300",
   };
 
-  // The QR encodes a compact JSON payload scanned at entry
-  const qrPayload = JSON.stringify({
-    id:     shortId,
-    name:   registrant.full_name,
-    email:  registrant.email,
-    phone:  registrant.phone,
-    org:    registrant.organization,
-    ticket: registrant.ticket_type,
-    type:   registrant.registration_type,
-  });
+  // The QR encodes a URL — scanning opens the styled ticket page
+  const qrPayload = `${typeof window !== "undefined" ? window.location.origin : ""}/ticket/${registrant.id}`;
 
   const handleSendEmail = async () => {
     setSendState("sending");

@@ -42,15 +42,8 @@ export async function POST(req: NextRequest) {
 
   const shortId = data.id.replace(/-/g, "").slice(-8).toUpperCase();
 
-  const qrPayload = JSON.stringify({
-    id:     shortId,
-    name:   data.full_name,
-    email:  data.email,
-    phone:  data.phone,
-    org:    data.organization,
-    ticket: data.ticket_type,
-    type:   data.registration_type,
-  });
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://theconvergencephc.com";
+  const qrPayload = `${siteUrl}/ticket/${data.id}`;
 
   // Generate QR code as a base64 PNG data URL
   const qrDataUrl = await QRCode.toDataURL(qrPayload, {
