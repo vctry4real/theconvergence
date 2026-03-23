@@ -3,6 +3,8 @@
 import { useState, useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
 
+type SendState = "idle" | "sending" | "sent" | "error";
+
 type TicketData = {
   id: string;
   full_name: string;
@@ -20,8 +22,9 @@ const TICKET_LABELS: Record<string, { label: string; color: string }> = {
 };
 
 export default function TicketModal({ registrant }: { registrant: TicketData }) {
-  const [open, setOpen] = useState(false);
-  const printRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen]           = useState(false);
+  const [sendState, setSendState] = useState<SendState>("idle");
+  const printRef                  = useRef<HTMLDivElement>(null);
 
   // Short ID shown on the ticket (last 8 chars of UUID)
   const shortId = registrant.id.replace(/-/g, "").slice(-8).toUpperCase();
@@ -41,6 +44,21 @@ export default function TicketModal({ registrant }: { registrant: TicketData }) 
     ticket: registrant.ticket_type,
     type:   registrant.registration_type,
   });
+
+  const handleSendEmail = async () => {
+    setSendState("sending");
+    try {
+      const res = await fetch("/api/send-ticket", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ registrantId: registrant.id }),
+      });
+      setSendState(res.ok ? "sent" : "error");
+      if (res.ok) setTimeout(() => setSendState("idle"), 4000);
+    } catch {
+      setSendState("error");
+    }
+  };
 
   const handlePrint = () => {
     if (!printRef.current) return;
@@ -83,6 +101,44 @@ export default function TicketModal({ registrant }: { registrant: TicketData }) 
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
               <h2 className="text-sm font-bold text-gray-900">Event Ticket</h2>
               <div className="flex items-center gap-2">
+                <button
+                  onClick={handleSendEmail}
+                  disabled={sendState === "sending" || sendState === "sent"}
+                  className={`inline-flex items-center gap-1.5 h-8 px-3 text-xs font-semibold rounded-lg transition-colors
+                    ${sendState === "sent"
+                      ? "bg-teal-100 text-teal-700 cursor-default"
+                      : sendState === "error"
+                      ? "bg-red-100 text-red-600 hover:bg-red-200"
+                      : "bg-teal-600 hover:bg-teal-700 text-white disabled:opacity-60"
+                    }`}
+                >
+                  {sendState === "sending" ? (
+                    <>
+                      <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                      </svg>
+                      Sending…
+                    </>
+                  ) : sendState === "sent" ? (
+                    <>
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      Sent!
+                    </>
+                  ) : sendState === "error" ? (
+                    "Retry Send"
+                  ) : (
+                    <>
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                      Send to Email
+                    </>
+                  )}
+                </button>
                 <button
                   onClick={handlePrint}
                   className="inline-flex items-center gap-1.5 h-8 px-3 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded-lg transition-colors"

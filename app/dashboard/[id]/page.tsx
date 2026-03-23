@@ -4,6 +4,7 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import StatusBadge from "@/components/dashboard/StatusBadge";
 import StatusUpdater from "@/components/dashboard/StatusUpdater";
 import TicketModal from "@/components/dashboard/TicketModal";
+import DeleteButton from "@/components/dashboard/DeleteButton";
 import type { RegistrationStatus } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
@@ -64,16 +65,19 @@ export default async function RegistrantDetailPage({
 
   return (
     <div className="space-y-6 max-w-4xl">
-      {/* Back */}
-      <Link
-        href="/dashboard"
-        className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-400 hover:text-teal-600 transition-colors"
-      >
-        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-        Back to Registrants
-      </Link>
+      {/* Back + delete row */}
+      <div className="flex items-center justify-between">
+        <Link
+          href="/dashboard"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-400 hover:text-teal-600 transition-colors"
+        >
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to Registrants
+        </Link>
+        <DeleteButton id={data.id} name={data.full_name} />
+      </div>
 
       {/* Header card */}
       <div className="bg-white border border-gray-200 rounded-2xl p-6">
