@@ -178,7 +178,7 @@ export async function POST(req: NextRequest) {
         filename:    "ticket-qr.png",
         content:     qrBase64,
         contentType: "image/png",
-        content_id:  "qrcode",
+        contentId:   "qrcode",
       },
     ],
   });
