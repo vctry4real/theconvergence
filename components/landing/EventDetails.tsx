@@ -46,7 +46,7 @@ const details = [
   },
   {
     label: "Venue",
-    primary: "Heritage House",
+    primary: "House on the Rock",
     secondary: "GRA Phase III, Port Harcourt",
     sub: "Plot F/23 Sani Abacha Road",
     icon: (

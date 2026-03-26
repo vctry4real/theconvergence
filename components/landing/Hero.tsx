@@ -125,7 +125,7 @@ export default function Hero() {
                   Saturday, 18th April 2026
                 </p>
                 <p className="text-xs font-black text-gray-700 tracking-widest uppercase">
-                  Heritage House GRA Phase III, Port Harcourt
+                  House on the Rock, GRA Phase III, Port Harcourt
                 </p>
               </div>
 

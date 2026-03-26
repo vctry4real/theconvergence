@@ -74,6 +74,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: SITE_URL,
   },
+  icons: {
+    icon: "/assets/logo/logo.webp",
+    apple: "/assets/logo/logo.webp",
+  },
 };
 
 export default function RootLayout({
