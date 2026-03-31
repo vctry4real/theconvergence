@@ -5,6 +5,7 @@ import About from "@/components/landing/About";
 import WhyAttend from "@/components/landing/WhyAttend";
 import Speakers from "@/components/landing/Speakers";
 import EventDetails from "@/components/landing/EventDetails";
+import FAQ from "@/components/landing/FAQ";
 import Footer from "@/components/landing/Footer";
 
 export const metadata: Metadata = {
@@ -73,6 +74,7 @@ export default function Home() {
         <WhyAttend />
         <Speakers />
         <EventDetails />
+        <FAQ />
         <Footer />
       </main>
     </>
