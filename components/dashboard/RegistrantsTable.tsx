@@ -84,6 +84,31 @@ export default function RegistrantsTable({ data }: { data: Registration[] }) {
       }
     });
 
+  const exportCSV = () => {
+    const headers = ["Name", "Email", "Phone", "Organisation", "Type", "Ticket", "Status", "Registered"];
+    const rows = filtered.map((r) => [
+      r.full_name,
+      r.email,
+      r.phone,
+      r.organization,
+      r.registration_type,
+      r.ticket_type ?? "",
+      r.status,
+      new Date(r.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }),
+    ]);
+
+    const escape = (v: string) => `"${v.replace(/"/g, '""')}"`;
+    const csv = [headers, ...rows].map((row) => row.map(escape).join(",")).join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = `convergence-registrants-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const handleStatusChange = async (id: string, newStatus: string) => {
     setUpdatingId(id);
     try {
@@ -114,9 +139,21 @@ export default function RegistrantsTable({ data }: { data: Registration[] }) {
             className="w-full pl-9 pr-4 h-9 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-teal-500 transition-colors"
           />
         </div>
-        <p className="text-xs text-gray-400 self-center sm:ml-auto">
-          {filtered.length} / {data.length} registrants
-        </p>
+        <div className="flex items-center gap-3 sm:ml-auto">
+          <p className="text-xs text-gray-400 self-center">
+            {filtered.length} / {data.length} registrants
+          </p>
+          <button
+            onClick={exportCSV}
+            disabled={filtered.length === 0}
+            className="flex items-center gap-1.5 h-9 px-4 bg-teal-600 hover:bg-teal-700 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-semibold rounded-xl transition-colors whitespace-nowrap"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Export CSV
+          </button>
+        </div>
       </div>
 
       {/* Row 2: filters + sort */}
