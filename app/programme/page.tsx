@@ -241,27 +241,27 @@ const programme: Block[] = [
 const accentClasses = {
   teal: {
     line: "bg-teal-500",
-    label: "text-teal-600",
-    badge: "bg-teal-50 text-teal-700 border-teal-200",
-    dot: "bg-teal-500",
+    label: "text-teal-400",
+    badge: "bg-teal-500/15 text-teal-300 border-teal-500/20",
+    dot: "bg-teal-400",
     sectionBorder: "border-teal-200",
-    interludeBg: "bg-teal-50 border-teal-100",
+    interludeBg: "bg-gray-800 border-gray-700",
   },
   blue: {
     line: "bg-blue-500",
-    label: "text-blue-600",
-    badge: "bg-blue-50 text-blue-700 border-blue-200",
-    dot: "bg-blue-500",
+    label: "text-blue-400",
+    badge: "bg-blue-500/15 text-blue-300 border-blue-500/20",
+    dot: "bg-blue-400",
     sectionBorder: "border-blue-200",
-    interludeBg: "bg-blue-50 border-blue-100",
+    interludeBg: "bg-gray-800 border-gray-700",
   },
   gold: {
     line: "bg-amber-500",
-    label: "text-amber-600",
-    badge: "bg-amber-50 text-amber-700 border-amber-200",
-    dot: "bg-amber-500",
+    label: "text-amber-400",
+    badge: "bg-amber-500/15 text-amber-300 border-amber-500/20",
+    dot: "bg-amber-400",
     sectionBorder: "border-amber-200",
-    interludeBg: "bg-amber-50 border-amber-100",
+    interludeBg: "bg-gray-800 border-gray-700",
   },
 };
 
@@ -278,17 +278,15 @@ function SessionCard({
     return (
       <div className={`flex items-center gap-4 py-3 px-5 rounded-xl border ${ac.interludeBg}`}>
         <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${ac.dot}`} />
-        <Music className="w-3.5 h-3.5 text-gray-400 shrink-0" />
-        <span className="text-gray-400 text-xs font-semibold tracking-widest uppercase">
+        <Music className="w-3.5 h-3.5 text-white/40 shrink-0" />
+        <span className="text-white/40 text-xs font-semibold tracking-widest uppercase">
           {session.time}
         </span>
-        <span className="w-px h-4 bg-gray-200 shrink-0" />
-        <span className="text-gray-600 text-sm font-medium">
-          {session.title}
-        </span>
+        <span className="w-px h-4 bg-white/10 shrink-0" />
+        <span className="text-white/70 text-sm font-medium">{session.title}</span>
         {session.speaker && (
           <>
-            <span className="w-px h-4 bg-gray-200 shrink-0 hidden sm:block" />
+            <span className="w-px h-4 bg-white/10 shrink-0 hidden sm:block" />
             <span className={`text-xs font-semibold hidden sm:block ${ac.label}`}>
               {session.speaker}
             </span>
@@ -299,17 +297,14 @@ function SessionCard({
   }
 
   const isKeynote = session.title.toLowerCase().startsWith("keynote");
-  const isDealOrSpecial = session.type === "special";
   const isNetworking = session.type === "networking";
 
   return (
     <div
-      className={`group rounded-2xl border transition-all duration-200 overflow-hidden ${
+      className={`group rounded-2xl border transition-colors duration-200 overflow-hidden ${
         isKeynote
-          ? "bg-white border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300"
-          : isDealOrSpecial
-            ? "bg-gray-50 border-gray-100 hover:bg-white hover:border-gray-200"
-            : "bg-gray-50 border-gray-100 hover:bg-white hover:border-gray-200"
+          ? "bg-gray-900 border-gray-700 hover:border-gray-600"
+          : "bg-gray-800 border-gray-700 hover:border-gray-600"
       }`}
     >
       {/* Top accent line on keynotes */}
@@ -328,22 +323,24 @@ function SessionCard({
           {/* Content */}
           <div className="flex-1 min-w-0">
             {session.concurrent && (
-              <span className="inline-block text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400 mb-1.5">
+              <span className="inline-block text-[10px] font-bold tracking-[0.2em] uppercase text-white/30 mb-1.5">
                 Concurrent
               </span>
             )}
             <h3
               className={`font-bold leading-snug mb-1 ${
                 isKeynote
-                  ? "text-gray-900 text-base sm:text-lg"
-                  : "text-gray-800 text-sm sm:text-base"
+                  ? "text-white text-base sm:text-lg"
+                  : "text-white/90 text-sm sm:text-base"
               }`}
             >
               {session.title}
             </h3>
 
             {session.subtitle && (
-              <p className="text-sm mb-3 leading-relaxed text-gray-500 italic">
+              <p className={`text-sm mb-3 leading-relaxed italic ${
+                isKeynote ? "text-white/55" : "text-white/45"
+              }`}>
                 {session.subtitle}
               </p>
             )}
@@ -359,16 +356,14 @@ function SessionCard({
               )}
               {isNetworking && (
                 <div className="flex items-center gap-1.5">
-                  <Users className="w-3 h-3 shrink-0 text-gray-400" />
-                  <span className="text-xs text-gray-400 font-medium">
-                    Open networking
-                  </span>
+                  <Users className="w-3 h-3 shrink-0 text-white/30" />
+                  <span className="text-xs text-white/30 font-medium">Open networking</span>
                 </div>
               )}
             </div>
 
             {session.detail && (
-              <p className="mt-2.5 text-xs text-gray-400 leading-relaxed">
+              <p className="mt-2.5 text-xs text-white/30 leading-relaxed">
                 {session.detail}
               </p>
             )}
