@@ -6,7 +6,9 @@
       "Bash(npm install:*)",
       "Bash(npm run:*)",
       "Bash(npm list:*)",
-      "Bash(grep -r \"qrcode\\\\|QRCode\\\\|resend\\\\|Resend\" c:/Users/johns/Documents/Projects/theconvergence --include=*.ts --include=*.tsx --include=*.js --include=*.json)"
+      "Bash(grep -r \"qrcode\\\\|QRCode\\\\|resend\\\\|Resend\" c:/Users/johns/Documents/Projects/theconvergence --include=*.ts --include=*.tsx --include=*.js --include=*.json)",
+      "Bash(ls c:/Users/johns/Documents/Projects/theconvergence/*.pdf)",
+      "Bash(ls c:/Users/johns/Documents/Projects/theconvergence/public/*.pdf)"
     ]
   }
 }
