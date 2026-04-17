@@ -85,7 +85,7 @@ export default function RegistrantsTable({ data }: { data: Registration[] }) {
     });
 
   const exportCSV = () => {
-    const headers = ["Name", "Email", "Phone", "Organisation", "Type", "Ticket", "Status", "Registered"];
+    const headers = ["Name", "Email", "Phone", "Organisation", "Type", "Ticket", "Status", "Registered", "Ticket URL"];
     const rows = filtered.map((r) => [
       r.full_name,
       r.email,
@@ -95,6 +95,7 @@ export default function RegistrantsTable({ data }: { data: Registration[] }) {
       r.ticket_type ?? "",
       r.status,
       new Date(r.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }),
+      `${window.location.origin}/ticket/${r.id}`,
     ]);
 
     const escape = (v: string) => `"${v.replace(/"/g, '""')}"`;
