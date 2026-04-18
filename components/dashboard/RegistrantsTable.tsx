@@ -85,18 +85,22 @@ export default function RegistrantsTable({ data }: { data: Registration[] }) {
     });
 
   const exportCSV = () => {
-    const headers = ["Name", "Email", "Phone", "Organisation", "Type", "Ticket", "Status", "Registered", "Ticket URL"];
-    const rows = filtered.map((r) => [
-      r.full_name,
-      r.email,
-      r.phone,
-      r.organization,
-      r.registration_type,
-      r.ticket_type ?? "",
-      r.status,
-      new Date(r.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }),
-      `${window.location.origin}/ticket/${r.id}`,
-    ]);
+    const headers = ["Name", "Email", "Phone", "Organisation", "Type", "Ticket", "Status", "Registered", "Ticket URL", "QR Code"];
+    const rows = filtered.map((r) => {
+      const ticketUrl = `${window.location.origin}/ticket/${r.id}`;
+      return [
+        r.full_name,
+        r.email,
+        r.phone,
+        r.organization,
+        r.registration_type,
+        r.ticket_type ?? "",
+        r.status,
+        new Date(r.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }),
+        ticketUrl,
+        `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(ticketUrl)}`,
+      ];
+    });
 
     const escape = (v: string) => `"${v.replace(/"/g, '""')}"`;
     const csv = [headers, ...rows].map((row) => row.map(escape).join(",")).join("\n");
