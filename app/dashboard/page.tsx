@@ -5,31 +5,59 @@ import type { RegistrationStatus } from "@/lib/validations";
 export const dynamic = "force-dynamic";
 
 async function getStats() {
-  const { data } = await supabaseAdmin
-    .from("registrations")
-    .select("status, registration_type, ticket_type");
+  // Use exact count queries to avoid Supabase's default 1,000-row limit
+  const countQuery = (filter?: { column: string; value: string }) => {
+    let q = supabaseAdmin
+      .from("registrations")
+      .select("*", { count: "exact", head: true });
+    if (filter) q = q.eq(filter.column, filter.value);
+    return q;
+  };
 
-  if (!data) return { total: 0, pending: 0, approved: 0, paid: 0, invite_sent: 0, access: 0, executive: 0, premier: 0 };
+  const [total, pending, approved, paid, invite_sent, access, executive, premier] =
+    await Promise.all([
+      countQuery(),
+      countQuery({ column: "status", value: "pending" }),
+      countQuery({ column: "status", value: "approved" }),
+      countQuery({ column: "status", value: "paid" }),
+      countQuery({ column: "status", value: "invite_sent" }),
+      countQuery({ column: "ticket_type", value: "access" }),
+      countQuery({ column: "ticket_type", value: "executive" }),
+      countQuery({ column: "ticket_type", value: "premier" }),
+    ]);
 
   return {
-    total:       data.length,
-    pending:     data.filter((r) => r.status === "pending").length,
-    approved:    data.filter((r) => r.status === "approved").length,
-    paid:        data.filter((r) => r.status === "paid").length,
-    invite_sent: data.filter((r) => r.status === "invite_sent").length,
-    access:      data.filter((r) => r.ticket_type === "access").length,
-    executive:   data.filter((r) => r.ticket_type === "executive").length,
-    premier:     data.filter((r) => r.ticket_type === "premier").length,
+    total:       total.count ?? 0,
+    pending:     pending.count ?? 0,
+    approved:    approved.count ?? 0,
+    paid:        paid.count ?? 0,
+    invite_sent: invite_sent.count ?? 0,
+    access:      access.count ?? 0,
+    executive:   executive.count ?? 0,
+    premier:     premier.count ?? 0,
   };
 }
 
 async function getRegistrants() {
-  const { data } = await supabaseAdmin
-    .from("registrations")
-    .select("id, created_at, full_name, email, phone, organization, registration_type, ticket_type, status")
-    .order("created_at", { ascending: false });
+  // Supabase returns max 1,000 rows per request — paginate to fetch all
+  const PAGE_SIZE = 1000;
+  const allRows: any[] = [];
+  let from = 0;
 
-  return data ?? [];
+  while (true) {
+    const { data } = await supabaseAdmin
+      .from("registrations")
+      .select("id, created_at, full_name, email, phone, organization, registration_type, ticket_type, status")
+      .order("created_at", { ascending: false })
+      .range(from, from + PAGE_SIZE - 1);
+
+    if (!data || data.length === 0) break;
+    allRows.push(...data);
+    if (data.length < PAGE_SIZE) break;   // last page
+    from += PAGE_SIZE;
+  }
+
+  return allRows;
 }
 
 const STAT_CARDS: {
